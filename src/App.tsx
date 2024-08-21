@@ -10,7 +10,7 @@ import { ThxLayout } from './thx/ThxLayout';
 import { sendDataToGA } from './utils/events';
 
 const min = 10_000;
-const max = 50_000;
+const max = 200_000;
 const step = 1;
 const range: SliderInputProps['range'] = {
   min: [min],
@@ -49,7 +49,7 @@ export const App = () => {
   const numberValue = typeof value === 'string' ? Number(value.replace(/\s+/g, '')) : value;
   const monthlyRate = numberValue > 29_999 ? 0.3999 : 0.598;
   const monthlyPayment = calculatePayment(numberValue, monthlyRate, periodValue);
-  const totalOverpay = monthlyPayment * periodValue - numberValue;
+  const totalOverpay = (monthlyPayment * periodValue - numberValue) / periodValue;
 
   const handleInputChange: SliderInputProps['onInputChange'] = (_, { value }) => {
     setValue(typeof value === 'string' ? Number(value.replace(/\s+/g, '')) : value);
@@ -144,10 +144,10 @@ export const App = () => {
 
         <div className={appSt.box}>
           <Typography.Text view="primary-medium" weight="bold">
-            {totalOverpay.toLocaleString('ru')} ₽
+            {Number(totalOverpay.toFixed(2)).toLocaleString('ru')} ₽
           </Typography.Text>
 
-          <Typography.Text view="primary-small">Эту сумму вы переплатите за весь период займа</Typography.Text>
+          <Typography.Text view="primary-small">Сумма переплаты в месяц</Typography.Text>
         </div>
       </div>
       <div className={appSt.bottomBtn}>
